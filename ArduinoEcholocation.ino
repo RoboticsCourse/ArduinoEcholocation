@@ -4,16 +4,15 @@
 // defines pin numbers and thresholds
 #define SIDE_TRIG_PIN 5
 #define SIDE_ECHO_PIN 6
-#define FRONT_TRIG_PIN 4
-#define FRONT_ECHO_PIN 3
+#define FRONT_TRIG_PIN 3 // white is trig
+#define FRONT_ECHO_PIN 8 // brown is echo
 #define SIDE_THRESH_HIGH 100
-#define SIDE_THRESH_LOW 50
+#define SIDE_THRESH_LOW 40
 #define FRONT_THRESH 50
-#define SPEED 255
+#define SPEED 80
 
-// setup motors
+// setup motors on motor shield
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
-
 Adafruit_DCMotor *frontMotor = AFMS.getMotor(4);
 Adafruit_DCMotor *rearMotor = AFMS.getMotor(2);
 Adafruit_DCMotor *turnMotor = AFMS.getMotor(3);
@@ -61,7 +60,7 @@ void turnRight() {
 }
 
 void readSensors() {
-
+    
     // clear the trig pins
     digitalWrite(SIDE_TRIG_PIN, LOW);
     digitalWrite(FRONT_TRIG_PIN, LOW);
@@ -81,7 +80,14 @@ void readSensors() {
 
 
 void setup() {
+
+    // communication with sensors for debugging
+    Serial.begin(9600);
+
+    // start motor shield communication
     AFMS.begin();
+
+    // set sensor pins accordingly
     pinMode(SIDE_TRIG_PIN, OUTPUT);
     pinMode(SIDE_ECHO_PIN, INPUT);
     pinMode(FRONT_TRIG_PIN, OUTPUT);
@@ -89,7 +95,15 @@ void setup() {
 }
 
 void loop() {
+
     readSensors();
+
+    // debug code block here
+    Serial.print("Front Distance: ");
+    Serial.print(frontDist);
+    Serial.print("\tSide Distance: ");
+    Serial.println(sideDist);
+
     if (frontDist < FRONT_THRESH) {
         if (sideDist < SIDE_THRESH_HIGH) {  // when encountering front and side walls, backup to the right
             turnRight();
