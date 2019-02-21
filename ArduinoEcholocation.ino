@@ -46,8 +46,8 @@ void goBackward() {
 }
 
 void straighten() {
-	turnMotor->setSpeed(0);
-	turnMotor->run(RELEASE);
+    turnMotor->setSpeed(0);
+    turnMotor->run(RELEASE);
 }
 
 void turnLeft() {
@@ -62,54 +62,54 @@ void turnRight() {
 
 void readSensors() {
 
-	// clear the trig pins
-	digitalWrite(SIDE_TRIG_PIN, LOW);
-	digitalWrite(FRONT_TRIG_PIN, LOW);
-	delayMicroseconds(2);
+    // clear the trig pins
+    digitalWrite(SIDE_TRIG_PIN, LOW);
+    digitalWrite(FRONT_TRIG_PIN, LOW);
+    delayMicroseconds(2);
 
-	// set the trig pins on HIGH state for 10 micro seconds
-	digitalWrite(SIDE_TRIG_PIN, HIGH);
-	digitalWrite(FRONT_TRIG_PIN, HIGH);
-	delayMicroseconds(10);
-	digitalWrite(SIDE_TRIG_PIN, LOW);
-	digitalWrite(FRONT_TRIG_PIN, LOW);
+    // set the trig pins on HIGH state for 10 micro seconds
+    digitalWrite(SIDE_TRIG_PIN, HIGH);
+    digitalWrite(FRONT_TRIG_PIN, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(SIDE_TRIG_PIN, LOW);
+    digitalWrite(FRONT_TRIG_PIN, LOW);
 
-	// read the echo pins, get the sound wave travel time in microseconds, calculate the distance
-	sideDist = pulseIn(SIDE_ECHO_PIN, HIGH) * 0.034/2;
-	frontDist = pulseIn(FRONT_ECHO_PIN, HIGH) * 0.034/2;
+    // read the echo pins, get the sound wave travel time in microseconds, calculate the distance
+    sideDist = pulseIn(SIDE_ECHO_PIN, HIGH) * 0.034/2;
+    frontDist = pulseIn(FRONT_ECHO_PIN, HIGH) * 0.034/2;
 }
 
 
 void setup() {
-	AFMS.begin();
-	pinMode(SIDE_TRIG_PIN, OUTPUT);
-	pinMode(SIDE_ECHO_PIN, INPUT);
-	pinMode(FRONT_TRIG_PIN, OUTPUT);
-	pinMode(FRONT_ECHO_PIN, INPUT);
+    AFMS.begin();
+    pinMode(SIDE_TRIG_PIN, OUTPUT);
+    pinMode(SIDE_ECHO_PIN, INPUT);
+    pinMode(FRONT_TRIG_PIN, OUTPUT);
+    pinMode(FRONT_ECHO_PIN, INPUT);
 }
 
 void loop() {
-	readSensors();
-	if (frontDist < FRONT_THRESH) {
-		if (sideDist < SIDE_THRESH_HIGH) { 	// when encountering front and side walls, backup to the right
-			turnRight();
-			goBackward();
-			delay(1500);
-		} else {							// when encountering only the front wall, back up to the left
-			turnLeft();
-			goBackward();
-			delay(1500);
-		}
-	} else {	// when in a hallway, try to keep an equal distance between the walls
-		if (sideDist < SIDE_THRESH_LOW) {
-			turnLeft();
-			goForward();
-		} else if (sideDist < SIDE_THRESH_HIGH){
-			straighten();
-			goForward();
-		} else {
-			turnRight();
-			goForward();
-		}
-	}
+    readSensors();
+    if (frontDist < FRONT_THRESH) {
+        if (sideDist < SIDE_THRESH_HIGH) {  // when encountering front and side walls, backup to the right
+            turnRight();
+            goBackward();
+            delay(1500);
+        } else {                            // when encountering only the front wall, back up to the left
+            turnLeft();
+            goBackward();
+            delay(1500);
+        }
+    } else {    // when in a hallway, try to keep an equal distance between the walls
+        if (sideDist < SIDE_THRESH_LOW) {
+            turnLeft();
+            goForward();
+        } else if (sideDist < SIDE_THRESH_HIGH){
+            straighten();
+            goForward();
+        } else {
+            turnRight();
+            goForward();
+        }
+    }
 }
