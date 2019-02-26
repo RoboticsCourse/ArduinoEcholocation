@@ -6,8 +6,8 @@
 #define SIDE_ECHO_PIN 6
 #define FRONT_TRIG_PIN 3 // white is trig
 #define FRONT_ECHO_PIN 8 // brown is echo
-#define SIDE_THRESH_HIGH 100
-#define SIDE_THRESH_LOW 40
+#define SIDE_THRESH_HIGH 70
+#define SIDE_THRESH_LOW 45
 #define FRONT_THRESH 50
 #define SPEED 80
 
@@ -20,7 +20,7 @@ Adafruit_DCMotor *turnMotor = AFMS.getMotor(3);
 // defines distance variables
 int sideDist;
 int frontDist;
-
+int tmp;
 
 // self-explanitory helper functions
 
@@ -74,8 +74,10 @@ void readSensors() {
     digitalWrite(FRONT_TRIG_PIN, LOW);
 
     // read the echo pins, get the sound wave travel time in microseconds, calculate the distance
-    sideDist = pulseIn(SIDE_ECHO_PIN, HIGH) * 0.034/2;
-    frontDist = pulseIn(FRONT_ECHO_PIN, HIGH) * 0.034/2;
+    tmp = pulseIn(SIDE_ECHO_PIN, HIGH) * 0.034/2;
+    sideDist = (tmp != 0) ? tmp : sideDist;
+    tmp = pulseIn(FRONT_ECHO_PIN, HIGH) * 0.034/2;
+    frontDist = (tmp != 0) ? tmp : frontDist;
 }
 
 
