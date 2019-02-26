@@ -46,6 +46,7 @@ void goBackward() {
 
 void straighten() {
     turnMotor->setSpeed(0);
+    delay(1);
     turnMotor->run(RELEASE);
 }
 
